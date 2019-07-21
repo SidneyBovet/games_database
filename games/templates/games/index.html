@@ -1,19 +1,122 @@
 
-{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+<!DOCTYPE HTML>
+<!--
+	Ethereal by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+{% load static %}
+<html>
+	<head>
+		<title>Games Database</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="{% static 'games/assets/css/main.css' %}" />
+		<noscript><link rel="stylesheet" href="{% static 'games/assets/css/noscript.css' %}" /></noscript>
+	</head>
+	<body class="is-preload">
 
-<form action="{% url 'games:index'%}" method="post">
-    {% csrf_token %}
-    <label for="player_count">Number of players</label>
-    <input type="number" name="player_count"/>
-    <input type="submit" value="Find games!">
-</form>
+		<!-- Page Wrapper -->
+			<div id="page-wrapper">
 
-{% if games_list %}
-<ul>
-    {% for game in games_list %}
-    <li><a href="{% url 'games:detail' game.id %}">{{ game.name }}</a></li>
-    {% endfor %}
-</ul>
-{% else %}
-<p>No games found.</p>
-{% endif %}
+				<!-- Wrapper -->
+					<div id="wrapper">
+
+						<!-- Panel (Banner) -->
+                        <section class="panel banner right">
+                            <div class="content color0 span-3-75">
+                                <h1 class="major">Browse Games</h1>
+
+                                {% if error_message %}<h2>{{ error_message }}</h2>{% endif %}
+
+                                <form action="{% url 'games:index'%}" method="post">
+                                    {% csrf_token %}
+                                    <div class="fields">
+                                        <div class="field half">
+                                            <label for="player_count">Number of players</label>
+                                            <input type="text" name="player_count" placeholder="{{ player_count }}"/>
+                                        </div>
+                                    </div>
+                                    <ul class="actions">
+                                        <li><input type="submit" value="Find games!" class="button primary" /></li>
+                                    </ul>
+                                </form>
+
+                            </div>
+                            <div class="image filtered span-1-75" data-position="25% 25%">
+                                <img src="{% static 'games/images/pic01.jpg' %}" alt="" />
+                            </div>
+                        </section>
+
+						<!-- List of games -->
+                        {% if games_list %}
+
+                        {% for game in games_list %}
+                        <!--li><a href="{% url 'games:detail' game.id %}">{{ game.name }}</a></li>-->
+                        
+                        <!-- Create Header for that section based on loop counter -->
+                        {% if forloop.counter|add:2|divisibleby:3 %} <!--1, 4, 7, ...-->
+                        <section class="panel color1 right">
+                        {% endif %}
+                        {% if forloop.counter|add:1|divisibleby:3 %} <!--2, 5, 8, ...-->
+                        <section class="panel color2 right">
+                        {% endif %}
+                        {% if forloop.counter|divisibleby:3 %} <!--3, 6, 9, ...-->
+                        <section class="panel color4 right">
+                        {% endif %}
+                            <div class="intro joined">
+                                <h2 class="major">{{ game.name }}</h2>
+                                <p><strong>{{ game.min_players }} to {{ game.max_players }} players</strong></p>
+                            </div>
+                            <div class="inner">
+                                <p>Genre: {{ game.game_genre.name }}<br/>
+                                Type: {{ game.game_type.name }}<br/>
+                                Owned since {{ game.own_date }}</p>
+                            </div>
+                        </section>
+                        {% endfor %}
+                        <section class="panel color3">
+                            <div class="intro joined">
+                                <h2 class="major">Otherwise</h2>
+                                <p>You can always grab a random <a href="https://www.youtube.com/results?search_query=blind+test">blind test</a>.</p>
+                            </div>
+                            <div class="inner">
+                                <ul class="grid-icons one">
+                                    <li><span class="icon solid fa-dice"><span class="label">Dolor</span></span></li>
+                                    <li><span class="icon solid fa-chess-knight"><span class="label">Ipsum</span></span></li>
+                                </ul>
+                            </div>
+                        </section>
+
+                        {% else %}
+
+                        <section class="panel color2">
+                            <div class="intro joined">
+                                <h2 class="major">No game found</h2>
+                                <p>You can always grab a random <a href="https://www.youtube.com/results?search_query=blind+test">blind test</a>.</p>
+                            </div>
+                            <div class="inner">
+                                <ul class="grid-icons one">
+                                    <li><span class="icon solid fa-dice"><span class="label">Dolor</span></span></li>
+                                    <li><span class="icon solid fa-chess-knight"><span class="label">Ipsum</span></span></li>
+                                </ul>
+                            </div>
+                        </section>
+
+                        {% endif %}
+
+						<!-- Copyright -->
+							<div class="copyright">Games Database <span class="icon solid fa-code-branch"><span class="label">GitHub</span></span> <a href="https://github.com/SidneyBovet/games_database">Code</a>. Design: <a href="https://html5up.net">HTML5 UP</a>. Image assets: <a href="https://unsplash.com/">Unsplash</a></div>
+
+					</div>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="{% static 'games/assets/js/jquery.min.js' %}"></script>
+			<script src="{% static 'games/assets/js/browser.min.js' %}"></script>
+			<script src="{% static 'games/assets/js/breakpoints.min.js' %}"></script>
+			<script src="{% static 'games/assets/js/main.js' %}"></script>
+
+	</body>
+</html>

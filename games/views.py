@@ -5,22 +5,29 @@ from .models import Game, Genre, Type
 
 def index(request):
     
-    games_list = Game.objects.all()
+    games_list = Game.objects.order_by('?').all()
+    player_count = 0
     if request.method == 'POST':
         try:
             player_count = pk=request.POST['player_count']
-            games_list = Game.objects.filter(
+            games_list = Game.objects.order_by('?').filter(
                 min_players__lte=player_count,
                 max_players__gte=player_count
             )
-        except (KeyError):
-            return render(request, 'polls/index.html', {
+        except KeyError:
+            return render(request, 'games/index.html', {
                 'games_list': games_list,
-                'error_message': "You didn't give a number of players.",
+                'error_message': "You didn't provide a number of players.",
+            })
+        except ValueError:
+            return render(request, 'games/index.html', {
+                'games_list': games_list,
+                'error_message': "Try giving an actual number of players.",
             })
 
     context = {
         'games_list': games_list,
+        'player_count': player_count,
     }
     return render(request, 'games/index.html', context)
 
