@@ -8,6 +8,8 @@ A clearly over-engineered solution to find a board game we can play given a numb
 
 You should first [install Django](https://www.djangoproject.com/start/).
 
+Also install `python -m pip install django-cors-headers` to access the BGG API.
+
 Then you should be able to run `python manage.py runserver`.
 
 You will probably need to migrate things using `python manage.py makemigrations` and `python manage.py migrate`.

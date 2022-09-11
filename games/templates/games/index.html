@@ -13,8 +13,9 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="{% static 'games/assets/css/main.css' %}" />
 		<noscript><link rel="stylesheet" href="{% static 'games/assets/css/noscript.css' %}" /></noscript>
+        <script src="{% static 'games/assets/js/bgg_data.js' %}"></script>
 	</head>
-	<body class="is-preload">
+	<body class="is-preload" onload="fill_in_bgg_data()">
 
 		<!-- Page Wrapper -->
 			<div id="page-wrapper">
@@ -53,7 +54,7 @@
 
                         {% for game in games_list %}
                         <!--li><a href="{% url 'games:detail' game.id %}">{{ game.name }}</a></li>-->
-                        
+
                         <!-- Create Header for that section based on loop counter -->
                         {% if forloop.counter|add:2|divisibleby:3 %} <!--1, 4, 7, ...-->
                         <section class="panel color1 right">
@@ -67,6 +68,9 @@
                             <div class="intro joined">
                                 <h2 class="major">{{ game.name }}</h2>
                                 <p><strong>{{ game.min_players }} to {{ game.max_players }} players</strong></p>
+
+                                <!-- This is filled up by fill_in_bgg_data (called on load) -->
+                                <p id="bgg_data_{{ game.name }}_{{ game.bgg_id }}"></p>
                             </div>
                             <div class="inner">
                                 <p>Genre: {{ game.game_genre.name }}<br/>

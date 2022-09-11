@@ -1,10 +1,8 @@
-from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
-from django.urls import reverse
-from .models import Game, Genre, Type
+from .models import Game
 
 def index(request):
-    
+
     games_list = Game.objects.order_by('?').all()
     player_count = 0
     if request.method == 'POST':
@@ -30,6 +28,7 @@ def index(request):
         'player_count': player_count,
     }
     return render(request, 'games/index.html', context)
+
 
 def detail(request, game_id):
     game = get_object_or_404(Game, pk=game_id)
