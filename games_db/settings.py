@@ -25,7 +25,13 @@ SECRET_KEY = 'mtb*#v*sc(&ws)wg^@02n_z=pg!lw@^jq^1f!m5^z5t$1gt&dl'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    'asrock-i5.local',
+    'unraid.home',
+    '192.168.0.198',
+]
 
 
 # Application definition
