@@ -16,7 +16,7 @@
         <script src="{% static 'games/assets/js/bgg_data.js' %}"></script>
         <link rel="shortcut icon" type="image/png" href="{% static 'games/images/favicon.ico' %}"/>
 	</head>
-	<body class="is-preload" onload="fill_in_bgg_data()">
+	<body class="is-preload" onload="fill_in_bgg_data({{ player_count }})">
 
 		<!-- Page Wrapper -->
 			<div id="page-wrapper">

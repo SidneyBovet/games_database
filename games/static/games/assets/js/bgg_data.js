@@ -1,4 +1,4 @@
-function fill_in_bgg_data() {
+function fill_in_bgg_data(player_count) {
     // List all ids of paragraphs
     var allElements = document.getElementsByTagName("p");
     for (var i = 0, n = allElements.length; i < n; ++i) {
@@ -10,7 +10,7 @@ function fill_in_bgg_data() {
             bgg_id = el.id.substring(pos+1);
 
             if (bgg_id > 0) {
-                add_bgg_metadata(bgg_id, el.id);
+                add_bgg_metadata(bgg_id, el.id, player_count);
             } else {
                 document.getElementById(el.id).innerHTML = 'No BGG data.';
             }
@@ -18,7 +18,7 @@ function fill_in_bgg_data() {
     }
 }
 
-function add_bgg_metadata(bgg_id, element_id) {
+function add_bgg_metadata(bgg_id, element_id, player_count) {
     var request = new XMLHttpRequest();
     request.onreadystatechange = function() {
         if (this.readyState == 4 &&  // DONE
@@ -37,6 +37,16 @@ function add_bgg_metadata(bgg_id, element_id) {
                 - Weight: ${weight}<br/>
             `;
             document.getElementById(element_id).innerHTML = content;
+
+            // Add note if optimal player count
+            if (player_count == opt_players) {
+                note = document.createElement('span');
+                note.classList.add('icon');
+                note.classList.add('solid');
+                note.classList.add('fa-thumbs-up');
+                note.innerHTML = ' Optimal player count!<br/><br/>';
+                document.getElementById(element_id).parentElement.insertAdjacentElement('afterbegin', note);
+            }
 
             // Add thumbnail with link
             link_to_bgg = document.createElement('a');
