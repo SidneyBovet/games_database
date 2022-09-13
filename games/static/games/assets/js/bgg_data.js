@@ -38,11 +38,16 @@ function add_bgg_metadata(bgg_id, element_id) {
             `;
             document.getElementById(element_id).innerHTML = content;
 
-            // Add thumbnail
+            // Add thumbnail with link
+            link_to_bgg = document.createElement('a');
+            link_to_bgg.href = `https://boardgamegeek.com/boardgame/${bgg_id}/`
+
             image_url = bgg_thumbnail(bgg_xml_data);
             thumbnail = document.createElement('img');
             thumbnail.src = image_url;
-            document.getElementById(element_id).insertAdjacentElement('beforebegin', thumbnail);
+
+            link_to_bgg.insertAdjacentElement('afterbegin', thumbnail);
+            document.getElementById(element_id).insertAdjacentElement('beforebegin', link_to_bgg);
         } else {
             document.getElementById(element_id).innerHTML = `Status ${this.status} from BGG API.`;
         }
