@@ -9,45 +9,46 @@ function fill_in_bgg_data() {
             pos = el.id.lastIndexOf('_');
             bgg_id = el.id.substring(pos+1);
 
-            // TODO: make this async
-            var content = 'BGG id not set in DB.';
             if (bgg_id > 0) {
-                // Call BGG API for that ID
-                bgg_xml_data = bgg_data_for(bgg_id);
-
-                // Extract interesting stuff
-                rating = bgg_rating(bgg_xml_data);
-                opt_players = bgg_opt_players(bgg_xml_data);
-                weight = bgg_weight(bgg_xml_data);
-
-                content = `
-                    - Rating: ${rating}<br/>
-                    - Best player count: ${opt_players}<br/>
-                    - Weight: ${weight}<br/>
-                `;
-
-                // Thumbnail
-                image_url = bgg_thumbnail(bgg_xml_data);
-                thumbnail = document.createElement('img');
-                thumbnail.src = image_url;
-                document.getElementById(el.id).insertAdjacentElement('beforebegin', thumbnail)
+                add_bgg_metadata(bgg_id, el.id);
+            } else {
+                document.getElementById(el.id).innerHTML = 'No BGG data.';
             }
-
-            document.getElementById(el.id).innerHTML = content;
         }
-
     }
 }
 
-function bgg_data_for(bgg_id) {
+function add_bgg_metadata(bgg_id, element_id) {
     var request = new XMLHttpRequest();
-    request.open("GET", `https://boardgamegeek.com/xmlapi2/thing?id=${bgg_id}&stats=1`, false);
+    request.onreadystatechange = function() {
+        if (this.readyState == 4 &&  // DONE
+            this.status == 200) {  // OK
+            var parser = new DOMParser();
+            var bgg_xml_data = parser.parseFromString(this.responseText, 'text/xml');
+
+            // Extract interesting stuff
+            rating = bgg_rating(bgg_xml_data);
+            opt_players = bgg_opt_players(bgg_xml_data);
+            weight = bgg_weight(bgg_xml_data);
+
+            content = `
+                - Rating: ${rating}<br/>
+                - Best player count: ${opt_players}<br/>
+                - Weight: ${weight}<br/>
+            `;
+            document.getElementById(element_id).innerHTML = content;
+
+            // Add thumbnail
+            image_url = bgg_thumbnail(bgg_xml_data);
+            thumbnail = document.createElement('img');
+            thumbnail.src = image_url;
+            document.getElementById(element_id).insertAdjacentElement('beforebegin', thumbnail);
+        } else {
+            document.getElementById(element_id).innerHTML = `Status ${this.status} from BGG API.`;
+        }
+    };
+    request.open("GET", `https://boardgamegeek.com/xmlapi2/thing?id=${bgg_id}&stats=1`, true);
     request.send();
-
-    parser = new DOMParser();
-    xmlDoc = parser.parseFromString(request.responseText, "text/xml");
-
-    return xmlDoc;
 }
 
 function bgg_rating(bgg_xml_data) {
