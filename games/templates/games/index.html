@@ -16,7 +16,7 @@
         <script src="{% static 'games/assets/js/bgg_data.js' %}"></script>
         <link rel="shortcut icon" type="image/png" href="{% static 'games/images/favicon.ico' %}"/>
 	</head>
-	<body class="is-preload" onload="fill_in_bgg_data({{ player_count }})">
+	<body class="is-preload">
 
 		<!-- Page Wrapper -->
 			<div id="page-wrapper">
@@ -68,17 +68,41 @@
                         {% endif %}
                             <div class="intro joined">
                                 <h2 class="major">{{ game.name }}</h2>
-                                <p><strong>{{ game.min_players }} to {{ game.max_players }} players</strong></p>
+                                <p>
+                                    {% if game.opt_players == player_count %}
+                                    <span class="icon solid fa-hand-peace"> Best group size</span><br/>
+                                    {% elif game.recommended_players %}
+                                    <span class="icon solid fa-thumbs-up"> Recommended for group size</span><br/>
+                                    {% elif game.bgg_id != 0 and player_count != 0 %}
+                                    <span class="icon solid fa-thumbs-down"> <strong>Not recommended</strong> for group size</span><br/>
+                                    {% endif %}
+                                </p>
 
-                                <!-- This is filled up by fill_in_bgg_data (called on load) -->
-                                <p id="bgg_data_{{ game.name }}_{{ game.bgg_id }}"></p>
+                                {% if game.bgg_id != 0 %}
+                                <a href="https://boardgamegeek.com/boardgame/{{game.bgg_id}}/">
+                                    <img style="height: 9em;" src="{{game.thumbnail}}"/>
+                                </a>
+                                {% elif game.thumbnail|length != 0 %}
+                                <img style="height: 4em;" src="{{game.thumbnail}}"/>
+                                {% endif %}
+
+                                {% if game.rating != -1 %}
+                                <p>
+                                    Rating: {{game.rating}}<br/>
+                                    Best player count: {{game.opt_players}}<br/>
+                                    Weight: {{game.weight}}<br/>
+                                </p>
+                                {% endif %}
                             </div>
-                            <div class="inner">
-                                <p>Genre: {{ game.game_genre.name }}<br/>
-                                Type: {{ game.game_type.name }}<br/>
-                                Duration: {{ game.duration }} min<br/>
-                                Owned since {{ game.own_date }}</p>
-                            </div>
+                            <div class="inner"><p>
+                                <strong>{{ game.min_players }} - {{ game.max_players }}</strong> players
+                                <br/>
+                                ~<strong>{{ game.duration }}</strong> minutes
+                                <br/>
+                                {{ game.game_type.name }}
+                                <br/>
+                                Owned since {{ game.own_date }}
+                            </p></div>
                         </section>
                         {% endfor %}
                         <section class="panel color3">
