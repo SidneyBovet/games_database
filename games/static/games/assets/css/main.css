@@ -378,6 +378,7 @@ input, select, textarea {
 
 		h2.major {
 			margin: 0 0 1.9875rem 0;
+			min-width: 15em;
 		}
 
 			h2.major:after {
